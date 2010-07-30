@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WebModels.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="WebModelsStoreContainer">
+    <EntitySet Name="T_Account" EntityType="WebModels.Store.T_Account" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="T_Role" EntityType="WebModels.Store.T_Role" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="T_Component" EntityType="WebModels.Store.T_Component" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="T_Action" EntityType="WebModels.Store.T_Action" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RF_RoleAction" EntityType="WebModels.Store.RoleAction" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RF_AccountRole" EntityType="WebModels.Store.AccountRole" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="RF_ComponentAction" Association="WebModels.Store.ComponentAction">
+      <End Role="Component" EntitySet="T_Component" />
+      <End Role="Action" EntitySet="T_Action" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RF_RoleAction_Role" Association="WebModels.Store.FK_RoleAction_Role">
+      <End Role="Role" EntitySet="T_Role" />
+      <End Role="RoleAction" EntitySet="RF_RoleAction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RF_RoleAction_Action" Association="WebModels.Store.FK_RoleAction_Action">
+      <End Role="Action" EntitySet="T_Action" />
+      <End Role="RoleAction" EntitySet="RF_RoleAction" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RF_AccountRole_Account" Association="WebModels.Store.FK_AccountRole_Account">
+      <End Role="Account" EntitySet="T_Account" />
+      <End Role="AccountRole" EntitySet="RF_AccountRole" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RF_AccountRole_Role" Association="WebModels.Store.FK_AccountRole_Role">
+      <End Role="Role" EntitySet="T_Role" />
+      <End Role="AccountRole" EntitySet="RF_AccountRole" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="T_Account">
+    <Key>
+      <PropertyRef Name="AccountID" />
+    </Key>
+    <Property Name="AccountID" Type="nvarchar" StoreGeneratedPattern="Identity" Nullable="false" MaxLength="50" />
+    <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="T_Role">
+    <Key>
+      <PropertyRef Name="RoleID" />
+    </Key>
+    <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="T_Component">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Icon" Type="nvarchar" Nullable="false" MaxLength="200" />
+    <Property Name="Assembly" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="Class" Type="nvarchar" Nullable="false" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="T_Action">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Method" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Icon" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ComponentID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RoleAction">
+    <Key>
+      <PropertyRef Name="RoleAction_Action_RoleID" />
+      <PropertyRef Name="Actions_ID" />
+    </Key>
+    <Property Name="RoleAction_Action_RoleID" Type="int" Nullable="false" />
+    <Property Name="Actions_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AccountRole">
+    <Key>
+      <PropertyRef Name="Account_AccountID" />
+      <PropertyRef Name="Roles_RoleID" />
+    </Key>
+    <Property Name="Account_AccountID" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Roles_RoleID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="ComponentAction">
+    <End Role="Component" Type="WebModels.Store.T_Component" Multiplicity="1" />
+    <End Role="Action" Type="WebModels.Store.T_Action" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Component">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Action">
+        <PropertyRef Name="ComponentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleAction_Role">
+    <End Role="Role" Type="WebModels.Store.T_Role" Multiplicity="1" />
+    <End Role="RoleAction" Type="WebModels.Store.RoleAction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="RoleAction">
+        <PropertyRef Name="RoleAction_Action_RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleAction_Action">
+    <End Role="RoleAction" Type="WebModels.Store.RoleAction" Multiplicity="*" />
+    <End Role="Action" Type="WebModels.Store.T_Action" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Action">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="RoleAction">
+        <PropertyRef Name="Actions_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccountRole_Account">
+    <End Role="Account" Type="WebModels.Store.T_Account" Multiplicity="1" />
+    <End Role="AccountRole" Type="WebModels.Store.AccountRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Account">
+        <PropertyRef Name="AccountID" />
+      </Principal>
+      <Dependent Role="AccountRole">
+        <PropertyRef Name="Account_AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_AccountRole_Role">
+    <End Role="AccountRole" Type="WebModels.Store.AccountRole" Multiplicity="*" />
+    <End Role="Role" Type="WebModels.Store.T_Role" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleID" />
+      </Principal>
+      <Dependent Role="AccountRole">
+        <PropertyRef Name="Roles_RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="WebModels" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="WebModelsContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="T_Account" EntityType="WebModels.Account" />
+          <EntitySet Name="T_Role" EntityType="WebModels.Role" />
+          <EntitySet Name="T_Component" EntityType="WebModels.Component" />
+          <EntitySet Name="T_Action" EntityType="WebModels.Action" />
+          <AssociationSet Name="RF_ComponentAction" Association="WebModels.ComponentAction">
+            <End Role="Component" EntitySet="T_Component" />
+            <End Role="Action" EntitySet="T_Action" />
+          </AssociationSet>
+          <AssociationSet Name="RF_RoleAction" Association="WebModels.RoleAction">
+            <End Role="Role" EntitySet="T_Role" />
+            <End Role="Action" EntitySet="T_Action" />
+          </AssociationSet>
+          <AssociationSet Name="RF_AccountRole" Association="WebModels.AccountRole">
+            <End Role="Account" EntitySet="T_Account" />
+            <End Role="Role" EntitySet="T_Role" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Type="String" Name="AccountID" Nullable="false" annotation:StoreGeneratedPattern="Identity" MaxLength="50" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="50" />
+          <NavigationProperty Name="Roles" Relationship="WebModels.AccountRole" FromRole="Account" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Type="Int32" Name="RoleID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <NavigationProperty Name="Actions" Relationship="WebModels.RoleAction" FromRole="Role" ToRole="Action" />
+          <NavigationProperty Name="Account" Relationship="WebModels.AccountRole" FromRole="Role" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="Component">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Icon" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Assembly" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Class" Nullable="false" MaxLength="100" />
+          <NavigationProperty Name="Actions" Relationship="WebModels.ComponentAction" FromRole="Component" ToRole="Action" />
+        </EntityType>
+        <EntityType Name="Action">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" />
+          <Property Type="String" Name="Method" Nullable="false" />
+          <Property Type="String" Name="Icon" Nullable="false" />
+          <NavigationProperty Name="Component" Relationship="WebModels.ComponentAction" FromRole="Action" ToRole="Component" />
+          <Property Type="Int32" Name="ComponentID" Nullable="false" />
+        </EntityType>
+        <Association Name="ComponentAction">
+          <End Type="WebModels.Component" Role="Component" Multiplicity="1" />
+          <End Type="WebModels.Action" Role="Action" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Component">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Action">
+              <PropertyRef Name="ComponentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RoleAction">
+          <End Type="WebModels.Role" Role="Role" Multiplicity="*" />
+          <End Type="WebModels.Action" Role="Action" Multiplicity="*" />
+        </Association>
+        <Association Name="AccountRole">
+          <End Type="WebModels.Account" Role="Account" Multiplicity="*" />
+          <End Type="WebModels.Role" Role="Role" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="WebModelsStoreContainer" CdmEntityContainer="WebModelsContainer">
+    <EntitySetMapping Name="T_Account">
+      <EntityTypeMapping TypeName="IsTypeOf(WebModels.Account)">
+        <MappingFragment StoreEntitySet="T_Account">
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_Role">
+      <EntityTypeMapping TypeName="IsTypeOf(WebModels.Role)">
+        <MappingFragment StoreEntitySet="T_Role">
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_Component">
+      <EntityTypeMapping TypeName="IsTypeOf(WebModels.Component)">
+        <MappingFragment StoreEntitySet="T_Component">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+          <ScalarProperty Name="Assembly" ColumnName="Assembly" />
+          <ScalarProperty Name="Class" ColumnName="Class" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="T_Action">
+      <EntityTypeMapping TypeName="IsTypeOf(WebModels.Action)">
+        <MappingFragment StoreEntitySet="T_Action">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Method" ColumnName="Method" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+          <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="RF_RoleAction" TypeName="WebModels.RoleAction" StoreEntitySet="RF_RoleAction">
+      <EndProperty Name="Role">
+        <ScalarProperty Name="RoleID" ColumnName="RoleAction_Action_RoleID" />
+      </EndProperty>
+      <EndProperty Name="Action">
+        <ScalarProperty Name="ID" ColumnName="Actions_ID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="RF_AccountRole" TypeName="WebModels.AccountRole" StoreEntitySet="RF_AccountRole">
+      <EndProperty Name="Account">
+        <ScalarProperty Name="AccountID" ColumnName="Account_AccountID" />
+      </EndProperty>
+      <EndProperty Name="Role">
+        <ScalarProperty Name="RoleID" ColumnName="Roles_RoleID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="WebModels" >
+        <EntityTypeShape EntityType="WebModels.Account" Width="1.5" PointX="1.375" PointY="1.875" Height="1.5879931640625" />
+        <EntityTypeShape EntityType="WebModels.Role" Width="1.5" PointX="3.5" PointY="0.75" Height="1.3969734700520831" />
+        <EntityTypeShape EntityType="WebModels.Component" Width="1.5" PointX="8.625" PointY="0.625" Height="2.16105224609375" />
+        <EntityTypeShape EntityType="WebModels.Action" Width="1.5" PointX="6.5" PointY="0.625" Height="2.16105224609375" />
+        <AssociationConnector Association="WebModels.ComponentAction">
+          <ConnectorPoint PointX="8.625" PointY="1.7055261230468748" />
+          <ConnectorPoint PointX="8" PointY="1.7055261230468748" />
+        </AssociationConnector>
+        <AssociationConnector Association="WebModels.RoleAction">
+          <ConnectorPoint PointX="5" PointY="1.6395064290364583" />
+          <ConnectorPoint PointX="6.5" PointY="1.6395064290364583" />
+        </AssociationConnector>
+        <AssociationConnector Association="WebModels.AccountRole">
+          <ConnectorPoint PointX="2.875" PointY="2.2020064290364583" />
+          <ConnectorPoint PointX="3.5" PointY="2.2020064290364583" />
+        </AssociationConnector>
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
